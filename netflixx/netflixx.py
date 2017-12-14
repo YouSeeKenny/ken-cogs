@@ -5,7 +5,7 @@ from discord.ext import commands
 from cogs.utils.dataIO import dataIO
 from cogs.utils import checks
 
-class Netflixx
+class Netflixx:
 	"""Request Netflix accounts by Kenny"""
 	
 	__author__ = "Kenny"
