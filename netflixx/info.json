@@ -1,0 +1,9 @@
+{
+    "AUTHOR" : "YouSeeKenny",
+    "SHORT" : "Request Netflix accounts!",
+    "DESCRIPTION" : "Requesting feature, similar to the suggestionbox cog, but commands are different",
+    "DISABLED" : false,
+    "NAME" : "Netflixx",
+    "TAGS" : ["netflix", "netflixx", "request"],
+    "INSTALL_MSG" : "Thanks for installing my cog. Enjoy it! Kenny"
+}
