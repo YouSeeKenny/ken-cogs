@@ -31,33 +31,33 @@ class Netflixx:
 		
 		if server_id not in self.settings:
 			self.settings[server_id] = {'inactive': True,
-										'output': [],
-										'cleanup': False,
-										'usercache': [],
-										'multiout': False
-										}
+						    'output': [],
+						    'cleanup': False,
+						    'usercache': [],
+						    'multiout': False
+						    }
 			self.save_json()
 			
 	@checks.admin_or_permissions(Manage_server=True)
 	@setflix.command(name="output", pass_context=True, no_pm=True)
 	async def setoutput(self, ctx, chan: discord.Channel):
 		"""Sets the output channel(s)"""
-		server = ctx.messages.server
+		server = ctx.message.server
 		if server_id not in self.settings:
-			self.initial_config(server_id)
+			self.initial_config(server.id)
 		if server != chan.server:
 			return await self.bot.say("Stop trying to break this")
 		if chan.type != discord.ChannelType.text:
 			return await self.bot.say("That isn't a text channel")
-		if chan.id in self.settings[server_id]['output']:
+		if chan.id in self.settings[server.id]['output']:
 			return await self.bot.say("Channel already set as output")
 			
-		if self.settings[server_id]['multiout']:
-			self.settings[server_id]['output'].append(chan.id)
+		if self.settings[server.id]['multiout']:
+			self.settings[server.id]['output'].append(chan.id)
 			self.save_json
 			return await self.bot.say("Channel added to output list")
 		else:
-			self.settings[server_id]['output'] = [chan.id]
+			self.settings[server.id]['output'] = [chan.id]
 			self.save_json
 			return await self.bot.say("Channel set as output")
 			
@@ -67,8 +67,8 @@ class Netflixx:
 		"""Toggles whether the requestfeature is enabled or not"""
 		server = ctx.message.server
 		if server_id not in self.settings:
-			self.initial_config(server_id)
-		self.settings[server_id]['inactive'] = \
+			self.initial_config(server.id)
+		self.settings[server.id]['inactive'] = \
 			not self.settings[server.id]['inactive']
 		self.save_json()
 		if self.settings[server.id]['inactive']:
@@ -79,23 +79,23 @@ class Netflixx:
 	@commands.cooldown(1, 120, commands.BucketType.user)
 	@commands.command(name="request", pass_context=True)
 	async def makesuggestion(self, ctx):
-		"make a request by following the prompts"
+		"Make a request by following the prompts"
 		author = ctx.message.author
 		server = ctx.message.server
 		
 		if server.id not in self.settings:
 			return await self.bot.say("Requests have not been "
 									  "configured for this server.")
-		if self.settings[server_id]['inactive']
+		if self.settings[server.id]['inactive']
 			return await self.bot.say("Requests are not currently "
 									  "enabled on this server.")
 		
-		if author.id in self.settings[server_id]['usercache']:
+		if author.id in self.settings[server.id]['usercache']:
 			return await self.bot.say("Finish making your prior request "
 									  "before making an additional one")
 									  
 		await self.bot.say("I will message you to collect your suggestion.")
-		self.settings[server_id]['usercache'].append(author.id)
+		self.settings[server.id]['usercache'].append(author.id)
 		self.save_json()
 		dm = await self.bot.send_message(author,
 										 "Please respond to this message"
@@ -111,7 +111,7 @@ class Netflixx:
 			await self.bot.send_message(author,
 										"I can't wait forever, "
 										"try again when ready")
-			self.settings[server_id]['usercache'].remove(author.id)
+			self.settings[server.id]['usercache'].remove(author.id)
 			self.save_json()
 		else:
 			await self.send_suggest(message, server)
@@ -128,7 +128,7 @@ class Netflixx:
 				else author.default_avatar_url
 				
 			em = discord.Embed(description=suggestion
-							   color=discord.Color.red())
+							   color=discord.Color.purple())
 		    em.set_author(name='Request from {0.display_name}'.format(author),
 						  icon_url=avatar)
 			em.set_foorter(text='{0.id'.format(author))
