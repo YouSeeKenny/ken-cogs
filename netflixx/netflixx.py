@@ -1,7 +1,11 @@
+import os
+import asyncio  # noqa: F401
 import discord
 from discord.ext import commands
+from cogs.utils.dataIO import dataIO
+from cogs.utils import checks
 
-class Netflix
+class Netflixx
 	"""Request Netflix accounts by Kenny"""
 	
 	__author__ = "Kenny"
